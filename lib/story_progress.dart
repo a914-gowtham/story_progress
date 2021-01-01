@@ -16,15 +16,12 @@ class Controller {
 class StoryProgress extends StatefulWidget {
   StoryProgress(
       {Key key,
-      this.play = false,
       this.progressCount = 1,
       this.duration = const Duration(seconds: 8),
       this.width = 200.0,
       @required this.onStatusChanged,
       this.color = Colors.black})
       : super(key: key);
-
-  final bool play;
 
   final int progressCount;
 
@@ -47,8 +44,6 @@ class StoryProgressState extends State<StoryProgress>
     with TickerProviderStateMixin {
   AnimationController _controller;
 
-  double _width;
-
   ProgressContainer spinningContainer;
 
   int _progressCount;
@@ -58,12 +53,6 @@ class StoryProgressState extends State<StoryProgress>
     super.initState();
 
     _progressCount = widget.progressCount;
-    _width = widget.width - 6;
-    if (_progressCount > 1) {
-      _width = _width - (2 * _progressCount);
-    }
-    _width = _width / _progressCount;
-
     _controller = AnimationController(
       duration: widget.duration,
       vsync: this,
@@ -71,7 +60,7 @@ class StoryProgressState extends State<StoryProgress>
 
     spinningContainer = ProgressContainer(
         progressCount: _progressCount,
-        width: _width,
+        width: widget.width,
         color: widget.color,
         statusChanged: (status) {
           widget.onStatusChanged(status);
@@ -87,10 +76,6 @@ class StoryProgressState extends State<StoryProgress>
 
   @override
   Widget build(BuildContext context) {
-    if (widget.play)
-      _controller.forward();
-    else
-      _controller.stop();
     return spinningContainer;
   }
 
@@ -101,6 +86,24 @@ class StoryProgressState extends State<StoryProgress>
   void previous() {
     spinningContainer.previous();
   }
+
+  void resetCurrentProgress() {
+    spinningContainer.resetCurrentProgress();
+  }
+
+  void resetAllProgress() {
+    spinningContainer.resetAllProgress();
+  }
+
+  void pause() {
+    if (_controller.isAnimating) _controller.stop();
+  }
+
+  void resume() {
+    _controller.forward();
+  }
+
+  bool isPlaying() => _controller.isAnimating;
 }
 
 //ProgressContainer contains all the progress widgets.
@@ -129,9 +132,15 @@ class ProgressContainer extends AnimatedWidget implements Controller {
 
   @override
   Widget build(BuildContext context) {
+    double _width = width - 6; //front and back margin
+    if (progressCount > 1) {
+      _width = _width - (2 * progressCount); //margin b/w two progress
+    }
+    _width = _width / progressCount;
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        for (var i = 0; i < progressCount; i++) _buildProgress(width, i),
+        for (var i = 0; i < progressCount; i++) _buildProgress(_width, i),
       ],
     );
   }
@@ -165,6 +174,15 @@ class ProgressContainer extends AnimatedWidget implements Controller {
       controller.forward();
       statusChanged(Status.next);
     }
+  }
+
+  void resetCurrentProgress() {
+    controller.reset();
+  }
+
+  void resetAllProgress() {
+    controller.reset();
+    currentIndex = 0;
   }
 
   @override

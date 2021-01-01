@@ -26,7 +26,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  var _play = false;
+  var isPlaying = false;
 
   var _formKey = GlobalKey<StoryProgressState>();
 
@@ -53,7 +53,6 @@ class _HomeState extends State<Home> {
             children: [
               StoryProgress(
                 key: _formKey,
-                play: _play,
                 progressCount: 4,
                 width: width,
                 duration: Duration(seconds: 4),
@@ -91,23 +90,35 @@ class _HomeState extends State<Home> {
                   icon: Icon(Icons.skip_next),
                   onPressed: () {
                     _formKey.currentState.skip();
+                    setState(() {
+                      _currentIndex = 0;
+                      isPlaying = false;
+                    });
                   }),
               IconButton(
                   icon: Icon(Icons.skip_previous),
                   onPressed: () {
                     _formKey.currentState.previous();
+                    setState(() {
+                      isPlaying = false;
+                    });
                   }),
               Spacer(),
             ],
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          child: Icon(_play ? Icons.pause : Icons.play_arrow),
+          child: Icon(isPlaying ? Icons.pause : Icons.play_arrow),
           backgroundColor: Colors.deepPurpleAccent,
           onPressed: () {
-            setState(() {
-              _play = !_play;
-            });
+            if (_formKey.currentState.isPlaying()) {
+              _formKey.currentState.pause();
+              isPlaying = false;
+            } else {
+              isPlaying = true;
+              _formKey.currentState.resume();
+            }
+            setState(() {});
           },
         ));
   }

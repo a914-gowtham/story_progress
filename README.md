@@ -21,7 +21,6 @@ import 'package:story_progress/story_progress.dart';
 
 StoryProgress(
        key: _formKey,
-       play: _play,
        progressCount: 4,
        width: width,
        duration: Duration(seconds: 3),
@@ -60,9 +59,9 @@ _formKey.currentState.previous();
  Use a boolean value to toggle play and pause
 
 ```dart
-setState(() {
-      _play = !_play;
-});
+
+  _formKey.currentState.pause();
+  _formKey.currentState.resume();
 
 ```
 

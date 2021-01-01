@@ -1,7 +1,7 @@
 name: story_progress
 description: show horizontal progress like instagram stories.can navigate to
   forward and previous stories.
-version: 0.0.4
+version: 0.0.5
 homepage: https://github.com/a914-gowtham/story_progress
 
 environment:

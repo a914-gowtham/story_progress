@@ -1,3 +1,6 @@
+## [0.0.5] - 2020-01-01
+* reset progress method added
+
 ## [0.0.4] - 2020-01-01
 * update documentation
 
