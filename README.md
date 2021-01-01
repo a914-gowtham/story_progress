@@ -47,6 +47,7 @@ StoryProgress(
 ```
 
 ###  Skip and Previous story
+Use this function on onPressed event
 
 ```dart
 
@@ -55,13 +56,13 @@ _formKey.currentState.previous();
 
 ```
 
-###  Pause and Resume story
- Use a boolean value to toggle play and pause
+###  Pause and Resume(start) story
+Use this function on onPressed event
 
 ```dart
 
   _formKey.currentState.pause();
-  _formKey.currentState.resume();
+  _formKey.currentState.resume(); //
 
 ```
 
