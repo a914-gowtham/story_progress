@@ -1,14 +1,77 @@
-# story_progress
+# Story Progress
 
-A new Flutter package.
+[![pub package](https://img.shields.io/pub/v/story_progress.svg)](https://pub.dartlang.org/packages/story_progress)
 
-## Getting Started
+A package provides an easy way to show horizontal progress like instagram stories in Flutter project
 
-This project is a starting point for a Dart
-[package](https://flutter.dev/developing-packages/),
-a library module containing code that can be shared easily across
-multiple Flutter or Dart projects.
+<p>
+    <img src="https://github.com/hnvn/flutter_shimmer/blob/master/screenshots/loading_list.gif?raw=true"/>
+    <img src="https://github.com/hnvn/flutter_shimmer/blob/master/screenshots/slide_to_unlock.gif?raw=true"/>
+</p>
 
-For help getting started with Flutter, view our 
-[online documentation](https://flutter.dev/docs), which offers tutorials, 
-samples, guidance on mobile development, and a full API reference.
+## How to use
+
+```dart
+import 'package:story_progress/story_progress.dart';
+
+```
+
+```dart
+  var _formKey = GlobalKey<StoryProgressState>(); 
+  var _play = false;
+
+StoryProgress(
+       key: _formKey,
+       play: _play,
+       progressCount: 4,
+       width: width,
+       duration: Duration(seconds: 3),
+       onStatusChanged: (value) {
+       WidgetsBinding.instance.addPostFrameCallback((_) {
+          switch (value) {
+             case Status.next:
+              //       
+             break;
+             case Status.previous:
+              //
+             break;
+             case Status.completed:
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text('Stories completed'),
+                          duration: Duration(seconds: 1),
+               ));
+             break;
+             }
+           });
+       },
+)
+
+```
+
+###  Skip and Previous story
+
+```dart
+
+_formKey.currentState.skip();
+_formKey.currentState.previous();
+
+```
+
+###  Pause and Resume story
+ Use a boolean value to toggle play and pause
+
+```dart
+setState(() {
+      _play = !_play;
+});
+
+```
+
+
+
+
+
+
+
+
+

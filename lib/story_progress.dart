@@ -1,7 +1,9 @@
 library story_progress;
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+///[Status] enum used for tracking story changes
 enum Status { next, previous, completed }
 
 class Controller {
@@ -14,12 +16,12 @@ class Controller {
 class StoryProgress extends StatefulWidget {
   StoryProgress(
       {Key key,
-        this.play = false,
-        this.progressCount = 1,
-        this.duration = const Duration(seconds: 8),
-        this.width = 200.0,
-        @required this.onStatusChanged,
-        this.color = Colors.black})
+      this.play = false,
+      this.progressCount = 1,
+      this.duration = const Duration(seconds: 8),
+      this.width = 200.0,
+      @required this.onStatusChanged,
+      this.color = Colors.black})
       : super(key: key);
 
   final bool play;
@@ -40,7 +42,7 @@ class StoryProgress extends StatefulWidget {
 // static StoryProgressState of(BuildContext context) => context.findAncestorStateOfType<StoryProgressState>();
 }
 
-
+/// AnimationControllers can be created with `vsync: this` because of TickerProviderStateMixin.
 class StoryProgressState extends State<StoryProgress>
     with TickerProviderStateMixin {
   AnimationController _controller;
@@ -56,8 +58,8 @@ class StoryProgressState extends State<StoryProgress>
     super.initState();
 
     _progressCount = widget.progressCount;
-    _width=widget.width-10;
-    if (_progressCount>1) {
+    _width = widget.width - 6;
+    if (_progressCount > 1) {
       _width = _width - (2 * _progressCount);
     }
     _width = _width / _progressCount;
@@ -101,6 +103,10 @@ class StoryProgressState extends State<StoryProgress>
   }
 }
 
+//ProgressContainer contains all the progress widgets.
+///It is using [AnimatedWidget] to animate progress with timer
+///For read more about animatedWidget refer this [https://api.flutter.dev/flutter/widgets/AnimatedWidget-class.html]
+// ignore: must_be_immutable
 class ProgressContainer extends AnimatedWidget implements Controller {
   final int progressCount;
   final double width;
@@ -112,11 +118,11 @@ class ProgressContainer extends AnimatedWidget implements Controller {
 
   ProgressContainer(
       {Key key,
-        this.statusChanged,
-        this.progressCount,
-        this.color,
-        this.width,
-        this.controller})
+      this.statusChanged,
+      this.progressCount,
+      this.color,
+      this.width,
+      this.controller})
       : super(key: key, listenable: controller);
 
   Animation<double> get _progress => listenable;
@@ -130,6 +136,8 @@ class ProgressContainer extends AnimatedWidget implements Controller {
     );
   }
 
+  ///This function navigates to previous story.
+  ///Only if [currentIndex] is greater than zero
   @override
   void previous() {
     if (currentIndex > 0) {
@@ -141,6 +149,9 @@ class ProgressContainer extends AnimatedWidget implements Controller {
     }
   }
 
+  ///This function navigates to next story.
+  ///If current story index is equals to [progressCount]-1 that means it is in last progress,
+  ///So, [statusChanged] to Status.completed
   void forward() {
     if (currentIndex == progressCount - 1) {
       print('finished'); //completed
@@ -161,6 +172,8 @@ class ProgressContainer extends AnimatedWidget implements Controller {
     forward();
   }
 
+  ///This function return single progress view
+  ///[width] is divided by [progressCount]
   Row _buildProgress(double width, int index) {
     if (_progress.value > 0.99 && controller.isAnimating) {
       if (progressCount == 1 || currentIndex != index) forward();
@@ -168,17 +181,21 @@ class ProgressContainer extends AnimatedWidget implements Controller {
 
     return Row(
       children: [
+        index == 0
+            ? SizedBox(
+                width: 3,
+              )
+            : Container(),
         Stack(
           children: [
-            index == 0
-                ? SizedBox(
-              width: 5,
-            )
-                : Container(),
             Align(
               alignment: Alignment.centerLeft,
               child: Container(
-                color: color.withOpacity(0.3),
+                decoration: new BoxDecoration(
+                  color: color.withOpacity(0.3),
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                ),
                 width: width,
                 height: 4,
               ),
@@ -186,7 +203,11 @@ class ProgressContainer extends AnimatedWidget implements Controller {
             Align(
               alignment: Alignment.centerLeft,
               child: Container(
-                color: color,
+                decoration: new BoxDecoration(
+                  color: color,
+                  shape: BoxShape.rectangle,
+                  borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                ),
                 width: currentIndex == index
                     ? width * _progress.value
                     : (index < currentIndex ? width : 0),
@@ -197,13 +218,12 @@ class ProgressContainer extends AnimatedWidget implements Controller {
         ),
         progressCount > 1 && index != progressCount - 1
             ? SizedBox(
-          width: 2,
-        )
+                width: 2,
+              )
             : SizedBox(
-          width: 5,
-        ),
+                width: 3,
+              ),
       ],
     );
   }
 }
-
