@@ -1,7 +1,6 @@
 name: story_progress
-description: A package provides an easy way to add shimmer effect in Flutter project
-version: 0.0.2
-author: Gowtham <a914gowtham@gmail.com>
+description: show horizontal progress like instagram stories.
+version: 0.0.3
 homepage: https://github.com/a914-gowtham
 
 environment:
