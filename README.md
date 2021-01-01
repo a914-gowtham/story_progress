@@ -5,8 +5,7 @@
 A package provides an easy way to show horizontal progress like instagram stories in Flutter project
 
 <p>
-    <img src="https://github.com/hnvn/flutter_shimmer/blob/master/screenshots/loading_list.gif?raw=true"/>
-    <img src="https://github.com/hnvn/flutter_shimmer/blob/master/screenshots/slide_to_unlock.gif?raw=true"/>
+    <img src="https://github.com/a914-gowtham/story_progress/blob/master/screenshots/demo1.gif?raw=true?size=200" width="250" height="480"/>
 </p>
 
 ## How to use
